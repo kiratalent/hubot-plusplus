@@ -41,7 +41,7 @@ module.exports = (robot) ->
     # let's get our local vars in place
     [__, name, operator, reason] = msg.match
     from = msg.message.user.name.toLowerCase()
-    room = msg.message.room
+    room = msg.message.room || msg.message.flow
 
     # do some sanitizing
     reason = reason?.trim().toLowerCase()
