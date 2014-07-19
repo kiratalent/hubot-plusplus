@@ -1,3 +1,7 @@
+# Description:
+#   Helper class for score keeping
+#
+
 class ScoreKeeper
   constructor: (@robot) ->
     @robot.brain.on 'loaded', =>
