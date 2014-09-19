@@ -1,20 +1,53 @@
 class ScoreKeeper
-  constructor: (@robot) ->
+  constructor: (@robot, @decayEnabled = false, @decayInterval = 24 * 60 * 60 ) ->
+    @decayInterval *= 1000
     @robot.brain.on 'loaded', =>
       @storage = robot.brain.data.plusPlus ||= {
         scores: {}
         log: {}
         reasons: {}
         last: {}
+        lastDecay: 0
       }
       if typeof @storage.last == "string"
         @storage.last = {}
 
       robot.logger.debug "Plus Plus Data Loaded: " + JSON.stringify(@storage, null, 2)
 
+      @initDecay() if @decayEnabled
+
   getUser: (user) ->
     @storage.scores[user] ||= 0
     user
+
+  initDecay: () ->
+    return if not @decayEnabled
+
+    console.log "Points Decay: Enabled"
+    elapsed = Date.now() - @storage.lastDecay
+
+    # Use => to keep scope for the @decayPoints method
+    setTimeout =>
+      @decayPoints()
+    , @decayInterval - elapsed
+
+  decayPoints: () ->
+    console.log "Decaying points..."
+    @normalize (score) ->
+      if score > 0
+        score = score - Math.ceil(score / 10)
+      else if score < 0
+        score = score - Math.floor(score / 10)
+
+      score
+
+    console.log "Done"
+    @storage.lastDecay = Date.now()
+
+    # Use => to keep scope for the @decayPoints method
+    setTimeout =>
+      @decayPoints()
+    , @decayInterval
 
   saveUser: (user, from, room, reason) ->
     @saveScoreLog(user, from, room, reason)
@@ -109,10 +142,9 @@ class ScoreKeeper
   normalize: (fn) ->
     scores = {}
 
-    _.each(@storage.scores, (score, name) ->
+    for name, score of @storage.scores
       scores[name] = fn(score)
       delete scores[name] if scores[name] == 0
-    )
 
     @storage.scores = scores
     @robot.brain.save()
