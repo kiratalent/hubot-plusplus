@@ -39,6 +39,8 @@ module.exports = (robot) ->
     ^
     # the thing being upvoted, which is any number of words and spaces
     ([\s\w'@]*)
+    # the increment/decrement operator ++ or --
+    ([-+]{2}|—)
     # optional reason for the plusplus
     (?:\s+(?:for|because|cause|cuz)\s+(.+))?
     $ # end of line
