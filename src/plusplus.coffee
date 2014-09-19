@@ -6,6 +6,8 @@
 #   "clark": "0.0.6"
 #
 # Configuration:
+#   HUBOT_PLUSPLUS_ENABLE_DECAY - Default: False. Enable points to decay over time
+#   HUBOT_PLUSPLUS_DECAY_INTERVAL - Default: 86400. Time between point decays in seconds (24 hours)
 #
 # Commands:
 #   <name>++
@@ -25,7 +27,11 @@ querystring = require('querystring')
 ScoreKeeper = require('./scorekeeper')
 
 module.exports = (robot) ->
-  scoreKeeper = new ScoreKeeper(robot)
+  scoreKeeper = new ScoreKeeper(
+    robot,
+    process.env.HUBOT_PLUSPLUS_ENABLE_DECAY,
+    process.env.HUBOT_PLUSPLUS_DECAY_INTERVAL
+  )
 
   # sweet regex bro
   robot.hear ///
