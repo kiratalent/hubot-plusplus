@@ -42,7 +42,7 @@ module.exports = (robot) ->
     # the increment/decrement operator ++ or --
     ([-+]{2}|—)
     # optional reason for the plusplus
-    (?:\s+(?:for|because|cause|cuz)\s+(.+))?
+    (?:\s+(?:for|because|cause|c[uo]z)\s+(.+))?
     $ # end of line
   ///i, (msg) ->
     # let's get our local vars in place
@@ -51,7 +51,7 @@ module.exports = (robot) ->
     room = msg.message.room || msg.envelope.user.flow
 
     # do some sanitizing
-    reason = reason?.trim().toLowerCase()
+    reason = reason?.trim()
     name = (name.replace /(^\s*@)|([,:\s]*$)/g, "").trim().toLowerCase() if name
 
     # check whether a name was specified. use MRU if not
@@ -87,7 +87,7 @@ module.exports = (robot) ->
     reasons = scoreKeeper.reasonsForUser(name)
 
     reasonString = if typeof reasons == 'object' && Object.keys(reasons).length > 0
-                     "#{name} has #{score} points. here are some raisins:" +
+                     "#{name} has #{score} points. here are some reasons:" +
                      _.reduce(reasons, (memo, val, key) ->
                        memo += "\n#{key}: #{val} points"
                      , "")
