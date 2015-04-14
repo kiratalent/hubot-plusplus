@@ -20,6 +20,9 @@ class ScoreKeeper
 
       @initDecay() if @decayEnabled
 
+  normalizeName: (name) ->
+    (name.replace /(^\s*@)|([,:\s]*$)/g, "").trim().toLowerCase()
+
   getUser: (user) ->
     @storage.scores[user] ||= 0
     user

@@ -52,7 +52,7 @@ module.exports = (robot) ->
 
     # do some sanitizing
     reason = reason?.trim()
-    name = (name.replace /(^\s*@)|([,:\s]*$)/g, "").trim().toLowerCase() if name
+    name = scoreKeeper.normalizeName(name) if name
 
     # check whether a name was specified. use MRU if not
     unless name?
@@ -81,8 +81,8 @@ module.exports = (robot) ->
         reason: reason
       }
 
-  robot.respond /score (for\s)?(.*)/i, (msg) ->
-    name = msg.match[2].trim().toLowerCase()
+  robot.respond /score (for\s)?(.+)/i, (msg) ->
+    name = scoreKeeper.normalizeName(msg.match[2])
     score = scoreKeeper.scoreForUser(name)
     reasons = scoreKeeper.reasonsForUser(name)
 
