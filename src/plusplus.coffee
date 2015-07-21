@@ -43,6 +43,8 @@ module.exports = (robot) ->
     ([-+]{2}|—)
     # optional reason for the plusplus
     (?:\s+(?:for|because|cause|c[uo]z)\s+(.+))?
+    # any trailing whitespace
+    \s*
     $ # end of line
   ///i, (msg) ->
     # let's get our local vars in place
